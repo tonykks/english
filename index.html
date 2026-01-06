@@ -157,29 +157,68 @@
 
     <!-- 슬라이더 스크립트 -->
     <script>
-        const track = document.getElementById('slider-track');
-        let index = 0;
-        const totalSlides = 3; 
-        
-        // [변경] 슬라이드 이동 간격을 10초(10000ms)로 설정
-        const slideInterval = 10000; 
-
-        function nextSlide() {
-            index++;
-            track.style.transition = 'transform 1s ease-in-out';
-            track.style.transform = `translateX(-${index * 25}%)`;
-
-            // 마지막 복제 슬라이드에 도달 시
-            if (index === totalSlides) {
-                setTimeout(() => {
-                    track.style.transition = 'none'; 
-                    index = 0; 
-                    track.style.transform = `translateX(0)`;
-                }, 1000); 
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+      const track = document.getElementById('slider-track');
+      if (!track) return; // slider-track이 없으면 조용히 종료(로컬/환경 차이 방어)
+    
+      const totalSlides = 3;          // 원본(실제) 슬라이드 수
+      const slidesWithClone = 4;      // 원본 3 + 복제 1
+      const step = 100 / slidesWithClone; // 25 (%)
+      const durationMs = 1000;        // transition 시간(1s)
+      const intervalMs = 10000;       // 슬라이드 간격(10s)
+    
+      let index = 0;
+      let timer = null;
+    
+      function goTo(i, withTransition = true) {
+        track.style.transition = withTransition ? `transform ${durationMs}ms ease-in-out` : 'none';
+        track.style.transform = `translateX(-${i * step}%)`;
+      }
+    
+      function scheduleNext() {
+        clearTimeout(timer);
+        timer = setTimeout(nextSlide, intervalMs);
+      }
+    
+      function nextSlide() {
+        index += 1;
+        goTo(index, true);
+    
+        // 마지막(복제) 슬라이드에 도달했으면 transition 끝난 직후 0으로 순간이동
+        if (index === totalSlides) {
+          const onEnd = (e) => {
+            if (e.propertyName !== 'transform') return;
+            track.removeEventListener('transitionend', onEnd);
+    
+            index = 0;
+            goTo(index, false); // 순간이동(transition OFF)
+    
+            // 다음 프레임에 transition 다시 ON (눈속임 안정화)
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                track.style.transition = `transform ${durationMs}ms ease-in-out`;
+              });
+            });
+    
+            scheduleNext();
+          };
+          track.addEventListener('transitionend', onEnd);
+        } else {
+          scheduleNext();
         }
-
-        setInterval(nextSlide, slideInterval);
+      }
+    
+      // 시작 상태 고정
+      goTo(0, false);
+      scheduleNext();
+    
+      // 탭 비활성화/복귀 시 타이머 꼬임 방지(선택이지만 안정적)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(timer);
+        else scheduleNext();
+      });
+    });
     </script>
 </body>
 </html>
+
