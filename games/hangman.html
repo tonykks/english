@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>영어 어순감각 익히기</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* 모바일 터치 최적화 및 스크롤 방지 */
+        body { 
+            background-color: #0f172a; 
+            color: #f8fafc; 
+            user-select: none; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overscroll-behavior: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-word { transition: all 0.1s; touch-action: manipulation; }
+        .btn-word:active { transform: scale(0.95); background-color: #e2e8f0; }
+        
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        
+        .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .pop-in { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #6366f1; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 캔버스 반응형 처리 */
+        .hangman-wrapper canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // =============================================================================
+        // 1. CONFIGURATION
+        // =============================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbzPzXmZVfTwNFVgNOuL7nnVbupVcbVw3IrHBvfAr9MTr6HwBFTSJcJVyjvLah6AT_nLnw/exec";
+
+        // [확장성 설정] 버튼 구성
+        const LEVEL_CONFIG = [
+            { id: 'pos1', title: '긍정문 1', range: '(1~20)', start: 0, end: 20, color: 'bg-emerald-600 active:bg-emerald-700', subColor: 'text-emerald-200' },
+            { id: 'pos2', title: '긍정문 2', range: '(21~40)', start: 20, end: 40, color: 'bg-teal-600 active:bg-teal-700', subColor: 'text-teal-200' },
+            { id: 'neg1', title: '부정문 1', range: '(41~60)', start: 40, end: 60, color: 'bg-indigo-600 active:bg-indigo-700', subColor: 'text-indigo-200' },
+            { id: 'neg2', title: '부정문 2', range: '(61~80)', start: 60, end: 80, color: 'bg-violet-600 active:bg-violet-700', subColor: 'text-violet-200' },
+            { id: 'ques1', title: '의문문 1', range: '(81~100)', start: 80, end: 100, color: 'bg-orange-600 active:bg-orange-700', subColor: 'text-orange-200' },
+            { id: 'ques2', title: '의문문 2', range: '(101~120)', start: 100, end: 120, color: 'bg-rose-600 active:bg-rose-700', subColor: 'text-rose-200' },
+        ];
+
+        const FALLBACK_DATA = [
+            { 
+                id: 1, 
+                word: "wear", 
+                pos: "v", 
+                meaning: "입다", 
+                english: "She wears a blue jacket.", 
+                korean: "그녀는 파란 재킷을 입는다.", 
+                "add words": "wearing, worn",
+                forms: "wear - wore - worn",
+                structure: "SVO" // 테스트용 구조 데이터 추가
+            }
+        ];
+
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // =============================================================================
+        // 2. AUDIO ENGINE
+        // =============================================================================
+        
+        let audioCtx = null;
+
+        const initAudioContext = () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        };
+
+        const speak = (text) => {
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; 
+            u.rate = 0.85; 
+            
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                const preferred = voices.find(v => v.name.includes("Google US English")) || voices.find(v => v.lang.startsWith("en-US"));
+                if (preferred) u.voice = preferred;
+            }
+            
+            window.speechSynthesis.speak(u);
+        };
+
+        const playSfx = (type) => {
+            if (!audioCtx) initAudioContext();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+
+            if (type === 'correct') { 
+                osc.type = 'sine'; 
+                osc.frequency.setValueAtTime(660, now); 
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now); 
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                osc.start(now); osc.stop(now + 0.5);
+            } else if (type === 'wrong') { 
+                osc.type = 'sawtooth'; 
+                osc.frequency.setValueAtTime(150, now); 
+                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                gain.gain.setValueAtTime(0.1, now); 
+                gain.gain.linearRampToValueAtTime(0.001, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
+            } else if (type === 'clear') { 
+                osc.type = 'triangle'; 
+                osc.frequency.setValueAtTime(523, now); 
+                osc.frequency.setValueAtTime(659, now+0.1); 
+                osc.frequency.setValueAtTime(784, now+0.2); 
+                osc.frequency.setValueAtTime(1046, now+0.3);
+                gain.gain.setValueAtTime(0.1, now); 
+                gain.gain.linearRampToValueAtTime(0.001, now + 1.2);
+                osc.start(now); osc.stop(now + 1.2);
+            } else if (type === 'fail') { 
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(100, now); 
+                osc.frequency.exponentialRampToValueAtTime(30, now + 1.5); 
+                gain.gain.setValueAtTime(0.15, now); 
+                gain.gain.linearRampToValueAtTime(0.001, now + 1.5);
+                osc.start(now); osc.stop(now + 1.5);
+            } else if (type === 'warning') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.linearRampToValueAtTime(800, now + 0.4); 
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.linearRampToValueAtTime(0.001, now + 0.4);
+                osc.start(now); osc.stop(now + 0.4);
+            }
+        };
+
+        const Icon = ({ path }) => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">{path}</svg>;
+        const I = {
+            Volume: <path d="M11 5 6 9 2 9 2 15 6 15 11 19 11 5 M19.07 4.93a10 10 0 0 1 0 14.14 M15.54 8.46a5 5 0 0 1 0 7.07" />,
+            Info: <><circle cx="12" cy="12" r="10" /><path d="M12 16v-4 M12 8h.01" /></>,
+            Next: <path d="M5 12h14 M12 5l7 7-7 7" />,
+            Home: <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>,
+            Refresh: <path d="M23 4v6h-6 M1 20v-6h6" />,
+            Lightbulb: <path d="M9 18h6 M10 22h4 M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z" />,
+            Close: <path d="M18 6L6 18M6 6l12 12" />
+        };
+
+        // =============================================================================
+        // 3. LOGIC & HELPERS
+        // =============================================================================
+        
+        // [구조 분석기] S,V,O,C,M 코드를 친절한 한글로 변환 (word 파라미터 추가)
+        const parseStructure = (code, word) => {
+            if (!code || typeof code !== 'string') return "구조 정보 없음";
+            
+            // 1. [New] 숙어(Phrase) 예외 처리 로직
+            // structure 데이터에 'Phrase', 'Idiom', '숙어' 등이 포함된 경우
+            const upperCode = code.toUpperCase();
+            if (upperCode.includes('PHRASE') || upperCode.includes('IDIOM') || upperCode.includes('숙어')) {
+                // (1) Target Word가 두 단어 이상(공백 포함)인 경우 -> "숙어: [단어]" 표시
+                if (word && word.trim().indexOf(' ') > -1) {
+                    return "숙어: " + word;
+                }
+                // (2) 한 단어인 경우 -> 그냥 "숙어"라고만 표시 (안전한 처리)
+                return "숙어";
+            }
+
+            const map = {
+                'S': '주어',
+                'V': '동사',
+                'O': '목적어',
+                'C': '보어',
+                'M': '수식어',
+                'I.O': '간접목적어',
+                'D.O': '직접목적어'
+            };
+
+            // 1. 점(.)이 포함된 복합 기호 처리 (I.O, D.O 등)
+            // 간단하게 정규식이나 문자열 치환으로 처리할 수 있으나, 
+            // 여기서는 주인님이 제시한 SVCM 등의 단일 문자 패턴을 우선 처리합니다.
+            
+            // 대문자로 변환 및 공백 제거
+            const cleanCode = code.toUpperCase().replace(/\s/g, '');
+            
+            // 한 글자씩 매핑하여 연결
+            const parts = [];
+            for (let char of cleanCode) {
+                if (map[char]) {
+                    parts.push(map[char]);
+                } else {
+                    // 매핑되지 않는 문자는 그대로 둠 (혹은 무시)
+                    parts.push(char);
+                }
+            }
+            
+            return parts.length > 0 ? parts.join(' + ') : cleanCode;
+        };
+
+        // =============================================================================
+        // 4. COMPONENTS
+        // =============================================================================
+
+        // [New Component] 품사 범례
+        const PosLegend = ({ className }) => (
+            <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1 ${className}`}>
+                {[
+                    {k:'n', v:'명사'}, {k:'v', v:'동사'}, {k:'a', v:'형용사'}, 
+                    {k:'ad', v:'부사'}, {k:'ph', v:'숙어'}, {k:'p', v:'전치사'}
+                ].map(i => (
+                    <span key={i.k} className="text-[9px] md:text-[10px] text-slate-400 whitespace-nowrap">
+                        <strong className="text-slate-200 font-bold">{i.k}</strong>:{i.v}
+                    </span>
+                ))}
+            </div>
+        );
+
+        const HangmanCanvas = ({ mistakes }) => {
+            const canvasRef = useRef(null);
+            useEffect(() => {
+                const ctx = canvasRef.current.getContext('2d');
+                ctx.strokeStyle = '#cbd5e1'; 
+                ctx.lineWidth = 4; 
+                ctx.lineCap = 'round';
+                ctx.clearRect(0, 0, 300, 300);
+                
+                const draw = (s) => {
+                    ctx.beginPath();
+                    if(s>=1) { ctx.moveTo(50,270); ctx.lineTo(250,270); ctx.moveTo(100,270); ctx.lineTo(100,50); ctx.lineTo(150,50); ctx.lineTo(150,80); }
+                    if(s>=2) { ctx.moveTo(170,100); ctx.arc(150,100,20,0,Math.PI*2); }
+                    if(s>=3) { ctx.moveTo(150,120); ctx.lineTo(150,190); }
+                    if(s>=4) { ctx.moveTo(150,130); ctx.lineTo(120,160); ctx.moveTo(150,130); ctx.lineTo(180,160); }
+                    if(s>=5) { ctx.moveTo(150,190); ctx.lineTo(120,230); ctx.moveTo(150,190); ctx.lineTo(180,230); }
+                    ctx.stroke();
+                };
+                draw(mistakes);
+            }, [mistakes]);
+            
+            return (
+                <div className="bg-slate-800 p-2 rounded-xl flex justify-center border border-slate-700 hangman-wrapper h-full min-h-[160px] items-center">
+                    <canvas ref={canvasRef} width={300} height={300} className="max-h-full w-auto" />
+                </div>
+            );
+        };
+
+        const getMorphologyInfo = (item) => {
+            if (!item) return null;
+            
+            // 1. 품사(POS) 데이터 정규화: 다양한 키값과 대소문자 처리
+            const rawPos = item.pos || item['word class'] || item['Part of Speech'] || item['POS'] || '';
+            const pos = rawPos.toLowerCase().replace(/\./g, '').trim();
+
+            // 2. 내용(Forms) 데이터 가져오기: Forms 컬럼이 없으면 Phrase 컬럼도 확인
+            const forms = item.forms || item.conjugation || item.phrase || item['Phrase'] || item['숙어'] || ''; 
+
+            let label = '활용/변화'; 
+            
+            // [수정됨] 숙어(Phrase/Idiom) 체크를 최우선으로 변경 및 조건 추가
+            if (pos === 'ph' || pos.includes('phrase') || pos.includes('숙어') || pos.includes('idiom')) {
+                label = '숙어';
+            } else if (pos === 'v' || pos === 'vt' || pos === 'vi' || pos.includes('verb') || pos.includes('동사')) {
+                label = '동사 변화';
+            } else if (pos === 'n' || pos.includes('noun') || pos.includes('명사')) {
+                label = '수 변화';
+            } else if (pos === 'a' || pos === 'ad' || pos === 'adj' || pos === 'adv' || pos.includes('형용사') || pos.includes('부사')) {
+                label = '비교 변화';
+            }
+            
+            return { label: label, value: forms };
+        };
+
+        function App() {
+            const [step, setStep] = useState('LOGIN'); 
+            const [username, setUsername] = useState('');
+            const [sheetList, setSheetList] = useState([]);
+            const [selectedSheet, setSelectedSheet] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const [errorMsg, setErrorMsg] = useState('');
+            const [urlSheet, setUrlSheet] = useState(null);
+
+            const [gameData, setGameData] = useState([]);
+            const [qIndex, setQIndex] = useState(0);
+            const [targetWords, setTargetWords] = useState([]);
+            const [userWords, setUserWords] = useState([]);
+            const [wordBank, setWordBank] = useState([]);
+            const [mistakes, setMistakes] = useState(0);
+            const [score, setScore] = useState(0);
+            const [shake, setShake] = useState(false);
+            const [roundStatus, setRoundStatus] = useState('playing'); 
+            const [currentLevelInfo, setCurrentLevelInfo] = useState({ title: '', range: '' });
+
+            // [New State] 힌트 모달 표시 여부
+            const [showHint, setShowHint] = useState(false);
+
+            useEffect(() => {
+                const params = new URLSearchParams(window.location.search);
+                const sheetParam = params.get('sheet');
+                if (sheetParam) {
+                    setUrlSheet(sheetParam);
+                    setSelectedSheet(sheetParam);
+                    fetchSheets(); 
+                } else {
+                    fetchSheets();
+                }
+            }, []);
+
+            const fetchSheets = () => {
+                setIsLoading(true);
+                fetch(`${API_URL}?action=getSheetNames`)
+                    .then(res => res.json())
+                    .then(json => {
+                        if (json.status === 'success' && Array.isArray(json.data)) {
+                            setSheetList(json.data);
+                            if (!new URLSearchParams(window.location.search).get('sheet') && json.data.length > 0) {
+                                setSelectedSheet(json.data[0]);
+                            }
+                        } else {
+                            setErrorMsg("목록 로드 실패");
+                        }
+                    })
+                    .catch(() => setErrorMsg("연결 실패"))
+                    .finally(() => setIsLoading(false));
+            };
+
+            const handleStartGame = async (levelConfig) => {
+                if (!username.trim()) return alert("이름을 입력하세요.");
+                
+                initAudioContext();
+
+                setIsLoading(true);
+                try {
+                    const res = await fetch(`${API_URL}?action=getData&sheet=${selectedSheet}`);
+                    const json = await res.json();
+                    let data = (json.status === 'success' && json.data.length > 0) ? json.data : FALLBACK_DATA;
+                    
+                    let slicedData = data.slice(levelConfig.start, levelConfig.end);
+
+                    if (slicedData.length === 0) {
+                        alert(`선택하신 범위(${levelConfig.range})에 해당하는 데이터가 시트에 없습니다.`);
+                        setIsLoading(false);
+                        return;
+                    }
+
+                    const shuffled = slicedData.sort(() => Math.random() - 0.5);
+                    setGameData(shuffled);
+                    setCurrentLevelInfo({ title: levelConfig.title, range: levelConfig.range });
+                    initLevel(shuffled[0]);
+                    setStep('GAME');
+                } catch (e) {
+                    alert("로드 실패. 샘플로 시작합니다.");
+                    setGameData(FALLBACK_DATA);
+                    initLevel(FALLBACK_DATA[0]);
+                    setStep('GAME');
+                } finally { setIsLoading(false); }
+            };
+
+            const initLevel = (problem) => {
+                const sentence = problem.english || problem.English || "No Data";
+                const clean = sentence.trim().replace(/[.!?]$/, ''); 
+                const correctWords = clean.split(/\s+/);
+                
+                setTargetWords(correctWords);
+                setUserWords([]);
+                setMistakes(0);
+                setRoundStatus('playing');
+                setShowHint(false); // 레벨 초기화 시 힌트 닫기
+
+                let distractors = [];
+                if (problem['add words']) {
+                    distractors = String(problem['add words']).split(',').map(w => w.trim()).filter(w => w);
+                }
+
+                const pool = [...correctWords, ...distractors];
+                const bank = pool.map((t, i) => ({ id: `${t}-${i}-${Math.random()}`, text: t, used: false }));
+                setWordBank(bank.sort(() => Math.random() - 0.5));
+            };
+
+            const handleWordClick = (wObj) => {
+                if (roundStatus !== 'playing') return;
+                
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+
+                const nextIdx = userWords.length;
+                const correctWord = targetWords[nextIdx];
+
+                if (wObj.text.toLowerCase() === correctWord.toLowerCase()) {
+                    playSfx('correct');
+                    const newUserWords = [...userWords, { ...wObj, text: correctWord }];
+                    setUserWords(newUserWords);
+                    setWordBank(wordBank.map(w => w.id === wObj.id ? { ...w, used: true } : w));
+
+                    if (newUserWords.length === targetWords.length) {
+                        const earnedPoints = Math.max(0, 10 - mistakes);
+                        setScore(s => s + earnedPoints);
+                        
+                        setRoundStatus('success');
+                        playSfx('clear');
+                        setTimeout(() => {
+                            const sent = gameData[qIndex].english || gameData[qIndex].English;
+                            speak(sent);
+                        }, 1500);
+                    }
+                } else {
+                    const newMistakes = mistakes + 1;
+                    setMistakes(newMistakes);
+                    setShake(true);
+                    setTimeout(() => setShake(false), 500);
+                    
+                    if (newMistakes >= 5) {
+                        setRoundStatus('fail');
+                        playSfx('fail'); 
+                        setTimeout(() => {
+                            const sent = gameData[qIndex].english || gameData[qIndex].English;
+                            speak(sent);
+                        }, 2000);
+                    } else if (newMistakes === 4) {
+                        playSfx('warning'); 
+                    } else {
+                        playSfx('wrong');
+                    }
+                }
+            };
+
+            const nextLevel = () => {
+                if (qIndex + 1 < gameData.length) {
+                    setQIndex(q => q + 1);
+                    initLevel(gameData[qIndex + 1]);
+                } else {
+                    setStep('RESULT');
+                    saveScore(score); 
+                }
+            };
+
+            const saveScore = (finalScore) => {
+                const logMsg = `Completed: ${selectedSheet} - ${currentLevelInfo.title}`;
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'saveScore', username, score: finalScore, log: logMsg })
+                });
+            };
+
+            const curr = gameData[qIndex] || {};
+            const morphInfo = getMorphologyInfo(curr); 
+            // 구조 텍스트 변환 (curr.word 추가 전달)
+            const structureText = parseStructure(curr.structure, curr.word);
+
+            return (
+                <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-900">
+                    {/* 힌트 모달 (팝업) */}
+                    {showHint && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 fade-in backdrop-blur-sm" onClick={() => setShowHint(false)}>
+                            <div className="bg-slate-800 border border-indigo-500/50 p-6 rounded-2xl shadow-2xl max-w-sm w-full mx-4 relative pop-in" onClick={e => e.stopPropagation()}>
+                                <button onClick={() => setShowHint(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">
+                                    <Icon path={I.Close} />
+                                </button>
+                                <div className="text-center">
+                                    <div className="w-12 h-12 bg-indigo-900/50 rounded-full flex items-center justify-center mx-auto mb-4 text-indigo-400 border border-indigo-500/30">
+                                        <Icon path={I.Lightbulb} />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-1">문장 구조 힌트</h3>
+                                    <p className="text-xs text-slate-400 mb-6">다음 순서로 문장을 만들어보세요!</p>
+                                    
+                                    <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-700">
+                                        <span className="text-base sm:text-lg md:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 leading-relaxed break-keep">
+                                            {structureText}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* STEP 1: 로그인 */}
+                    {step === 'LOGIN' && (
+                        <div className="bg-slate-800 p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-sm border border-slate-700 animate-fade-in">
+                            <h1 className="text-xl md:text-2xl font-bold text-indigo-400 mb-6 text-center">영어 어순감각 익히기</h1>
+                            
+                            <div className="mb-4">
+                                <label className="block text-slate-400 text-xs mb-1">학생 이름</label>
+                                <input type="text" value={username} onChange={e=>setUsername(e.target.value)} 
+                                    className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:outline-none focus:border-indigo-500 text-sm" placeholder="이름을 입력하세요" />
+                            </div>
+                            
+                            {!urlSheet && (
+                                <div className="mb-6">
+                                    <label className="block text-slate-400 text-xs mb-1">학습할 과</label>
+                                    <select value={selectedSheet} onChange={e=>setSelectedSheet(e.target.value)} 
+                                        className="w-full bg-slate-900 border border-slate-600 rounded p-3 text-white focus:outline-none text-sm">
+                                        {sheetList.length > 0 ? sheetList.map(s => <option key={s} value={s}>{s}</option>) : <option>로딩 중...</option>}
+                                    </select>
+                                </div>
+                            )}
+
+                            {urlSheet && (
+                                <div className="mb-6 text-center">
+                                    <span className="bg-indigo-900 text-indigo-200 px-3 py-1 rounded-full text-xs font-bold border border-indigo-700">
+                                        {selectedSheet}
+                                    </span>
+                                </div>
+                            )}
+
+                            <div className="grid grid-cols-2 gap-2">
+                                {LEVEL_CONFIG.map((level) => (
+                                    <button 
+                                        key={level.id}
+                                        onClick={() => handleStartGame(level)} 
+                                        disabled={isLoading || (!urlSheet && sheetList.length === 0)} 
+                                        className={`${level.color} text-white py-2.5 rounded-lg transition flex items-center justify-center touch-manipulation shadow-md border-b-4 border-black/20 active:border-b-0 active:mt-1`}
+                                    >
+                                        <span className="text-sm md:text-base font-bold tracking-wide">{level.title}</span>
+                                    </button>
+                                ))}
+                            </div>
+
+                            {isLoading && <div className="mt-4 text-center text-slate-400 text-xs flex justify-center items-center gap-2"><div className="loader"></div> 준비 중...</div>}
+                        </div>
+                    )}
+
+                    {/* STEP 2: 게임 플레이 (모바일 레이아웃 최적화 + UI 개선) */}
+                    {step === 'GAME' && (
+                        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-12 gap-4 animate-fade-in">
+                            
+                            {/* 상단/좌측: 정보 패널 */}
+                            <div className="md:col-span-4 flex flex-col gap-3 order-1">
+                                {/* [Updated Grid] Player, Score, Progress, Hint (4열) */}
+                                <div className="bg-slate-800 p-2 rounded-xl border border-slate-700 grid grid-cols-4 gap-1 items-center shadow-md">
+                                    {/* 1. Player */}
+                                    <div className="flex flex-col items-center border-r border-slate-700/50 px-1">
+                                        <span className="text-[9px] text-slate-400 uppercase tracking-wider">Player</span>
+                                        <span className="text-xs font-bold text-white truncate w-full text-center">{username}</span>
+                                    </div>
+                                    
+                                    {/* 2. Score */}
+                                    <div className="flex flex-col items-center border-r border-slate-700/50 px-1">
+                                        <span className="text-[9px] text-slate-400 uppercase tracking-wider">Score</span>
+                                        <span className="text-lg font-bold text-indigo-400 whitespace-nowrap">
+                                            {score}
+                                        </span>
+                                    </div>
+
+                                    {/* 3. Progress */}
+                                    <div className="flex flex-col items-center border-r border-slate-700/50 px-1">
+                                        <span className="text-[9px] text-slate-400 uppercase tracking-wider">Step</span>
+                                        <span className="text-lg font-bold text-emerald-400 whitespace-nowrap">
+                                            {qIndex + 1}<span className="text-xs text-slate-500 font-normal">/</span>{gameData.length}
+                                        </span>
+                                    </div>
+
+                                    {/* 4. Hint (New) */}
+                                    <div className="flex flex-col items-center px-1">
+                                        <button 
+                                            onClick={() => setShowHint(true)}
+                                            className="bg-indigo-600 active:bg-indigo-700 text-white p-2 rounded-lg shadow-sm w-full flex flex-col items-center justify-center transition-colors touch-manipulation"
+                                        >
+                                            <Icon path={I.Lightbulb} />
+                                            <span className="text-[8px] font-bold mt-0.5">HINT</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                {/* [Mobile Only] 제목 대신 범례 표시 (행맨 위) */}
+                                <div className="md:hidden mt-1">
+                                    <PosLegend />
+                                </div>
+
+                                {/* 행맨 & 단어 카드 */}
+                                <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
+                                    <HangmanCanvas mistakes={mistakes} />
+                                    
+                                    <div className="bg-slate-800 p-3 rounded-xl border border-slate-700 shadow-md flex flex-col justify-center h-full">
+                                        {/* [PC Only] 단어 카드 내부 상단에 범례 표시 (Key Word 위) */}
+                                        <div className="hidden md:block mb-2 pb-2 border-b border-slate-700/50">
+                                            <PosLegend />
+                                        </div>
+
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="flex-grow">
+                                                <span className="text-[9px] text-indigo-400 font-bold tracking-wider uppercase block">KEY WORD</span>
+                                                <h3 className="text-xl font-bold text-white leading-tight break-all">{curr.word || 'Word'}</h3>
+                                                
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <span className="inline-block bg-slate-700 text-slate-300 text-[10px] px-1.5 py-0.5 rounded border border-slate-600">
+                                                        {curr.pos || curr['word class'] || '품사'}
+                                                    </span>
+                                                    <span className="text-sm text-emerald-400 font-medium truncate max-w-[100px] md:max-w-none">
+                                                        {curr.meaning || '뜻'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button onClick={() => speak(curr.word)} className="p-2 bg-indigo-600 active:bg-indigo-700 rounded-full text-white shadow touch-manipulation flex-shrink-0 ml-1">
+                                                <Icon path={I.Volume} />
+                                            </button>
+                                        </div>
+
+                                        <div className="mt-auto pt-2 border-t border-slate-700/50 min-h-[3rem] flex flex-col justify-center">
+                                            {/* 라벨 */}
+                                            <span className="text-[10px] text-slate-400 uppercase mb-0.5 block">{morphInfo ? morphInfo.label : '활용/변화'}</span>
+                                            
+                                            {/* 값 */}
+                                            <p className="text-base font-bold text-indigo-300 leading-tight break-words min-h-[1.5rem]">
+                                                {morphInfo ? morphInfo.value : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 하단/우측: 게임 보드 */}
+                            <div className="md:col-span-8 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col shadow-lg relative min-h-[50vh] order-2">
+                                <div className="text-center mb-4">
+                                    <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-wider mb-1">영어 어순으로 배열하세요</p>
+                                    <h2 className="text-lg md:text-xl font-bold text-white mb-4 break-keep leading-snug">"{curr.Korean || curr.korean}"</h2>
+                                    
+                                    <div className="flex flex-wrap justify-center gap-1.5 min-h-[40px]">
+                                        {targetWords.map((w, i) => (
+                                            <div key={i} className={`px-2 py-1.5 rounded-md text-sm md:text-base font-medium border-b-2 transition-all ${i < userWords.length ? 'bg-indigo-600 border-indigo-800 text-white' : 'bg-slate-700 border-slate-600 text-transparent min-w-[30px]'}`}>
+                                                {i < userWords.length ? userWords[i].text : '?'}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className={`grid grid-cols-3 sm:grid-cols-4 gap-2 mt-auto transition-opacity duration-300 ${shake ? 'shake' : ''} ${roundStatus !== 'playing' ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+                                    {wordBank.map((w) => (
+                                        <button key={w.id} onClick={() => !w.used && handleWordClick(w)} disabled={w.used}
+                                            className={`p-2.5 rounded-lg text-xs md:text-sm font-bold shadow-sm border-b-4 transition-all touch-manipulation active:scale-95 active:border-b-0 active:mt-1 ${w.used ? 'bg-slate-900 border-slate-900 text-slate-700 opacity-50' : 'bg-slate-700 border-slate-900 text-slate-200'}`}>
+                                            {w.text}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {roundStatus !== 'playing' && (
+                                    <div className="absolute inset-0 bg-slate-900/95 rounded-xl flex flex-col items-center justify-center z-20 fade-in-up p-4 text-center">
+                                        <h3 className={`text-3xl font-bold mb-2 ${roundStatus === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                                            {roundStatus === 'success' ? 'Correct!' : 'Failed'}
+                                        </h3>
+                                        {roundStatus === 'success' && <span className="text-yellow-400 font-bold text-lg mb-4">+{Math.max(0, 10 - mistakes)} pts</span>}
+                                        
+                                        <div className="bg-slate-800 py-3 px-4 rounded-lg border border-slate-700 w-full mb-6">
+                                            <p className="text-slate-300 text-sm md:text-lg font-medium leading-relaxed mb-2">
+                                                {curr.English || curr.english}
+                                            </p>
+                                            <button onClick={() => speak(curr.English || curr.english)} className="inline-flex items-center justify-center p-2 bg-slate-700 active:bg-slate-600 rounded-full text-white">
+                                                <Icon path={I.Volume} />
+                                            </button>
+                                        </div>
+                                        
+                                        <button onClick={nextLevel} className="w-full max-w-xs px-6 py-3 bg-indigo-600 active:bg-indigo-500 rounded-lg text-white font-bold flex items-center justify-center gap-2 shadow-lg">
+                                            다음 문제 <Icon path={I.Next} />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {step === 'RESULT' && (
+                        <div className="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-700 text-center animate-fade-in">
+                            <h2 className="text-2xl font-bold text-white mb-2">Game Over</h2>
+                            <p className="text-slate-400 mb-6 text-sm">{username}님의 최종 점수</p>
+                            <div className="text-5xl font-black text-yellow-400 mb-8">{score}</div>
+                            <button onClick={() => window.location.reload()} className="w-full bg-slate-700 active:bg-slate-600 text-white font-bold py-3 rounded-lg transition flex justify-center items-center gap-2">
+                                <Icon path={I.Home} /> 처음으로
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
