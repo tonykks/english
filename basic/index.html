@@ -1,94 +1,216 @@
-<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>초등용</title>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>토니와 함께하는 기초영어 - 초급(초등용)</title>
 
-    <style>
-    :root{
-      --brand:#1f4fb6;
-      --brand-2:#2b5aa6;
-      --ink:#0e2247;
-      --bg:#f6f8fc;
-      --card:#ffffff;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;color:var(--ink)}
-    .wrap{max-width:840px;margin:48px auto;padding:0 20px}
-    .topbar{display:flex;gap:10px;align-items:center;margin-bottom:18px}
-    .back{
-      text-decoration:none;background:#e9efff;border:1px solid #cfdcff;color:var(--brand);
-      padding:10px 14px;border-radius:10px;display:inline-flex;gap:8px;align-items:center;font-weight:600;
-    }
-    .back:hover{background:#dfe8ff}
-    .card{
-      background:var(--card);border:1px solid #e6ecff;border-radius:18px;
-      box-shadow:0 6px 20px rgba(24,46,90,.08);padding:26px 24px;
-    }
-    h1{margin:6px 0 10px 0;font-size:1.9rem;letter-spacing:-.5px}
-    p.lead{margin:0 0 20px 0;color:#3a4660}
-    .list{display:grid;gap:16px;margin-top:6px}
-    .pill{
-      display:block;text-decoration:none;color:#fff;font-weight:700;
-      padding:16px 20px;border-radius:999px;text-align:center;
-      background:linear-gradient(135deg,var(--brand),#3f73ff);
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- [이미지 프리로딩] (basic 폴더 기준: ../images/...) -->
+  <link rel="preload" as="image" href="../images/common/main_banner.jpg">
+  <link rel="preload" as="image" href="../images/common/main_banner1.jpg">
+  <link rel="preload" as="image" href="../images/common/main_banner2.jpg">
+
+  <style>
+    body { font-family: 'Noto Sans KR', sans-serif; word-break: keep-all; }
+    .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+    .slider-transition { transition: transform 1s ease-in-out; }
+
+    /* 초등용 버튼(기존 pill 느낌 유지) */
+    .pill {
+      display:block;
+      text-decoration:none;
+      color:#fff;
+      font-weight:800;
+      padding:16px 20px;
+      border-radius:999px;
+      text-align:center;
+      background:linear-gradient(135deg,#1f4fb6,#3f73ff);
       border:1px solid #17439a;
       box-shadow:0 6px 14px rgba(47,86,170,.18);
+      transition: transform .15s ease, box-shadow .15s ease;
     }
-    .pill:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(47,86,170,.22)}
-    .section-title{
-      text-align:center;font-size:1.6rem;font-weight:800;margin:8px 0 22px 0;letter-spacing:-.3px
-    }
-    footer{margin-top:22px;color:#5b6a8c;font-size:.92rem;text-align:center}
-    @media (max-width:520px){
-      .wrap{margin:28px auto}
-      h1{font-size:1.6rem}
-      .pill{padding:14px 16px}
-    }
-    </style>
-    
+    .pill:hover { transform: translateY(-1px); box-shadow:0 10px 18px rgba(47,86,170,.22); }
+  </style>
 </head>
-<body>
-  <div class="wrap">
-    <div class="topbar">
-      <a class="back" href="word_card.html">← English 메뉴로</a>
+
+<body class="bg-gray-100">
+
+  <!-- ✅ 메인과 동일한 상단 배너(단, 링크는 basic 기준 상대경로로 변경) -->
+  <header class="relative w-full h-[350px] overflow-hidden group">
+    <div id="slider-track" class="absolute inset-y-0 left-0 flex flex-nowrap w-[400%] h-full z-0 slider-transition">
+      <img src="../images/common/main_banner.jpg"  alt="Main Banner 1"
+           class="w-1/4 h-full object-cover flex-shrink-0"
+           onerror="this.src='../images/common/main_banner.jpg'">
+      <img src="../images/common/main_banner1.jpg" alt="Main Banner 2"
+           class="w-1/4 h-full object-cover flex-shrink-0"
+           onerror="this.src='../images/common/main_banner.jpg'">
+      <img src="../images/common/main_banner2.jpg" alt="Main Banner 3"
+           class="w-1/4 h-full object-cover flex-shrink-0"
+           onerror="this.src='../images/common/main_banner.jpg'">
+      <img src="../images/common/main_banner.jpg"  alt="Clone Banner"
+           class="w-1/4 h-full object-cover flex-shrink-0">
     </div>
 
-    <div class="card">
-      <div class="section-title">초등용</div>
-      <p class="lead">아래 버튼을 눌러 바로 퀴즈를 시작하세요.</p>
-      <div class="list">
-        <a class="pill" target="_blank" href="https://gemini.google.com/share/215465a840af">초등 단어장 (1과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://gemini.google.com/share/074f37328060">초등 단어장 (2과_Be동사 퀴즈)</a>
-<!-- 
-<a class="pill" target="_blank" href="https://g.co/gemini/share/dbe046b254cd">초등 단어장 (3과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://gemini.google.com/share/6749473bde72">초등 단어장 (4과_동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://gemini.google.com/share/374adf304475">초등 단어장 (5과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://g.co/gemini/share/80b03334af61">초등 단어장 (6과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://gemini.google.com/share/c69079c5f3f3">초등 단어장 (7과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://gemini.google.com/share/09bcedef6715">초등 단어장 (7과_소유격 퀴즈)</a>
--->
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_8_1">초등 단어장 (8과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_8_2">초등 단어장 (8과_소유격 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_9_1">초등 단어장 (9과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_9_2">초등 단어장 (9과_소유격 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_10_1">초등 단어장 (10과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_10_2">초등 단어장 (10과_소유격 퀴즈)</a>
-<!-- <a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_11_1">초등 단어장 (11과_Be동사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_11_2">초등 단어장 (11과_일반동사 퀴즈)</a> -->
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_12_1">초등 단어장 (12과_부정문 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_12_2">초등 단어장 (12과_의문문 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_13">초등 단어장 (13과_형용사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_14">초등 단어장 (14과_부사/전치사 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_15">초등 단어장 (15과_의문사1 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_16">초등 단어장 (16과_의문사2 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_17">초등 단어장 (17과_현재진행형 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_18_1">초등 단어장 (18_1과_현재진행 부정문 퀴즈)</a>          
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_18_2">초등 단어장 (18_2과_현재진행 의문문 퀴즈)</a>
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_1">초등 단어장 (19_1과_조동사의 위치 퀴즈)</a>          
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_2">초등 단어장 (19_2과_조동사 부정문 퀴즈)</a>          
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_3">초등 단어장 (19_3과_조동사 의문문 퀴즈)</a>          
-<a class="pill" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_4">초등 단어장 (19_4과_조동사 의문문 대답 퀴즈)</a>
+    <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
+
+    <div class="relative z-20 w-full h-full flex flex-col justify-center items-center">
+      <h1 class="text-4xl md:text-6xl font-black text-white text-shadow tracking-tight mb-8">
+        토니와 함께하는 기초영어
+      </h1>
+
+      <div class="absolute bottom-6 w-full flex justify-center px-4">
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="../index.html#intro"
+             class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">소개</a>
+
+          <a href="./index.html"
+             class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">초급</a>
+
+          <a href="../intermediate/index.html"
+             class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">중급</a>
+
+          <a href="../advanced/index.html"
+             class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">고급</a>
+        </div>
       </div>
-      <footer>해설이 필요하면 English ▾ → 문법해설에서 확인하세요.</footer>
     </div>
-  </div>
-</body></html>
+  </header>
+
+  <!-- ✅ 초급(초등용) 콘텐츠 -->
+  <main class="w-full py-12 px-4 flex justify-center">
+    <div class="w-full max-w-3xl bg-white p-6 md:p-8 rounded-2xl shadow-xl border-t-4 border-yellow-400">
+      <div class="flex justify-between items-center gap-3 mb-5">
+        <a href="../index.html"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold border border-indigo-100">
+          ← English 메인으로
+        </a>
+        <div class="text-sm text-gray-500 font-medium">초급 · 초등용</div>
+      </div>
+
+      <h2 class="text-2xl md:text-3xl font-black text-gray-800 text-center mb-3">초등용</h2>
+      <p class="text-center text-gray-600 mb-7">아래 버튼을 눌러 바로 퀴즈를 시작하세요.</p>
+
+      <div class="grid gap-4">
+        <a class="pill" target="_blank" rel="noopener" href="https://gemini.google.com/share/215465a840af">초등 단어장 (1과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://gemini.google.com/share/074f37328060">초등 단어장 (2과_Be동사 퀴즈)</a>
+
+        <!-- ✅ 여러 줄 메모(주석) 처리: 사라진 URL은 이렇게 한 번에 감싸두면 편합니다.
+        <a class="pill" target="_blank" rel="noopener" href="https://g.co/gemini/share/dbe046b254cd">초등 단어장 (3과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://gemini.google.com/share/6749473bde72">초등 단어장 (4과_동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://gemini.google.com/share/374adf304475">초등 단어장 (5과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://g.co/gemini/share/80b03334af61">초등 단어장 (6과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://gemini.google.com/share/c69079c5f3f3">초등 단어장 (7과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://gemini.google.com/share/09bcedef6715">초등 단어장 (7과_소유격 퀴즈)</a>
+        -->
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_8_1">초등 단어장 (8과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_8_2">초등 단어장 (8과_소유격 퀴즈)</a>
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_9_1">초등 단어장 (9과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_9_2">초등 단어장 (9과_소유격 퀴즈)</a>
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_10_1">초등 단어장 (10과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_10_2">초등 단어장 (10과_소유격 퀴즈)</a>
+
+        <!-- 11과는 파일 누락 시 에러 날 수 있으니, 준비되면 주석 해제
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_11_1">초등 단어장 (11과_Be동사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_11_2">초등 단어장 (11과_일반동사 퀴즈)</a>
+        -->
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_12_1">초등 단어장 (12과_부정문 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_12_2">초등 단어장 (12과_의문문 퀴즈)</a>
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_13">초등 단어장 (13과_형용사 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_14">초등 단어장 (14과_부사/전치사 퀴즈)</a>
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_15">초등 단어장 (15과_의문사1 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_16">초등 단어장 (16과_의문사2 퀴즈)</a>
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_17">초등 단어장 (17과_현재진행형 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_18_1">초등 단어장 (18_1과_현재진행 부정문 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_18_2">초등 단어장 (18_2과_현재진행 의문문 퀴즈)</a>
+
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_1">초등 단어장 (19_1과_조동사의 위치 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_2">초등 단어장 (19_2과_조동사 부정문 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_3">초등 단어장 (19_3과_조동사 의문문 퀴즈)</a>
+        <a class="pill" target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_4">초등 단어장 (19_4과_조동사 의문문 대답 퀴즈)</a>
+      </div>
+
+      <p class="text-center text-sm text-gray-500 mt-7">
+        해설이 필요하면 English ▾ → 문법해설에서 확인하세요.
+      </p>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white py-6 text-center">
+    <p class="text-xs opacity-70">&copy; 2024 Tony's English. All Rights Reserved.</p>
+  </footer>
+
+  <!-- ✅ 슬라이더 스크립트(메인과 동일 로직) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const track = document.getElementById('slider-track');
+      if (!track) return;
+
+      const totalSlides = 3;               // 원본 슬라이드 수
+      const slidesWithClone = 4;           // 원본 3 + 복제 1
+      const step = 100 / slidesWithClone;  // 25%
+      const durationMs = 1000;             // 1s
+      const intervalMs = 10000;            // 10s
+
+      let index = 0;
+      let timer = null;
+
+      function goTo(i, withTransition = true) {
+        track.style.transition = withTransition ? `transform ${durationMs}ms ease-in-out` : 'none';
+        track.style.transform = `translateX(-${i * step}%)`;
+      }
+
+      function scheduleNext() {
+        clearTimeout(timer);
+        timer = setTimeout(nextSlide, intervalMs);
+      }
+
+      function nextSlide() {
+        index += 1;
+        goTo(index, true);
+
+        if (index === totalSlides) {
+          const onEnd = (e) => {
+            if (e.propertyName !== 'transform') return;
+            track.removeEventListener('transitionend', onEnd);
+
+            index = 0;
+            goTo(index, false);
+
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                track.style.transition = `transform ${durationMs}ms ease-in-out`;
+              });
+            });
+
+            scheduleNext();
+          };
+          track.addEventListener('transitionend', onEnd);
+        } else {
+          scheduleNext();
+        }
+      }
+
+      goTo(0, false);
+      scheduleNext();
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(timer);
+        else scheduleNext();
+      });
+    });
+  </script>
+</body>
+</html>
