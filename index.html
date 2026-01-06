@@ -1,0 +1,61 @@
+<script>
+  const track = document.getElementById('slider-track');
+
+  const totalSlides = 3;          // 원본(실제) 슬라이드 수
+  const slidesWithClone = 4;      // 원본 3 + 복제 1
+  const step = 100 / slidesWithClone; // 25 (%)
+  const durationMs = 1000;        // CSS transition 시간과 동일하게
+  const intervalMs = 3000;        // 다음 슬라이드까지 대기 시간
+
+  let index = 0;
+  let timer = null;
+
+  function goTo(i, withTransition = true) {
+    track.style.transition = withTransition ? `transform ${durationMs}ms ease-in-out` : 'none';
+    track.style.transform = `translateX(-${i * step}%)`;
+  }
+
+  function scheduleNext() {
+    clearTimeout(timer);
+    timer = setTimeout(nextSlide, intervalMs);
+  }
+
+  function nextSlide() {
+    index += 1;
+    goTo(index, true);
+
+    // 마지막(복제)로 이동했으면, transition이 끝난 뒤 0으로 순간이동
+    if (index === totalSlides) {
+      const onEnd = (e) => {
+        if (e.propertyName !== 'transform') return;
+        track.removeEventListener('transitionend', onEnd);
+
+        // 0으로 점프 (transition OFF)
+        index = 0;
+        goTo(index, false);
+
+        // 다음 프레임에 transition 다시 ON (눈속임 안정화)
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            track.style.transition = `transform ${durationMs}ms ease-in-out`;
+          });
+        });
+
+        scheduleNext();
+      };
+      track.addEventListener('transitionend', onEnd);
+    } else {
+      scheduleNext();
+    }
+  }
+
+  // 첫 위치 고정 후 시작
+  goTo(0, false);
+  scheduleNext();
+
+  // 탭이 비활성화됐다가 돌아왔을 때 타이밍 꼬임 방지(선택)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearTimeout(timer);
+    else scheduleNext();
+  });
+</script>
