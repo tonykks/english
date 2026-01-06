@@ -62,36 +62,52 @@ footer{margin-top:22px;color:#5b6a8c;font-size:.92rem;text-align:center}
 <body>
 
 <!-- ✅ 상단 배너 (초급과 동일 구조) -->
-<header class="relative w-full h-[350px] overflow-hidden">
+<!-- ✅ 메인과 동일한 상단 배너 (중급 기준 상대경로 적용) -->
+<header class="relative w-full h-[350px] overflow-hidden group">
   <div id="slider-track"
-       class="absolute inset-y-0 left-0 flex w-[400%] h-full slider-transition">
-    <img src="../images/common/main_banner.jpg" class="w-1/4 h-full object-cover">
-    <img src="../images/common/main_banner1.jpg" class="w-1/4 h-full object-cover">
-    <img src="../images/common/main_banner2.jpg" class="w-1/4 h-full object-cover">
-    <img src="../images/common/main_banner.jpg" class="w-1/4 h-full object-cover">
+       class="absolute inset-y-0 left-0 flex flex-nowrap w-[400%] h-full z-0 slider-transition">
+    <img src="../images/common/main_banner.jpg"  alt="Main Banner 1"
+         class="w-1/4 h-full object-cover flex-shrink-0"
+         onerror="this.src='../images/common/main_banner.jpg'">
+    <img src="../images/common/main_banner1.jpg" alt="Main Banner 2"
+         class="w-1/4 h-full object-cover flex-shrink-0"
+         onerror="this.src='../images/common/main_banner.jpg'">
+    <img src="../images/common/main_banner2.jpg" alt="Main Banner 3"
+         class="w-1/4 h-full object-cover flex-shrink-0"
+         onerror="this.src='../images/common/main_banner.jpg'">
+
+    <!-- 무한 루프용 복제 이미지 -->
+    <img src="../images/common/main_banner.jpg" alt="Clone Banner"
+         class="w-1/4 h-full object-cover flex-shrink-0">
   </div>
 
+  <!-- 오버레이 -->
   <div class="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
 
+  <!-- 텍스트/버튼 -->
   <div class="relative z-20 w-full h-full flex flex-col justify-center items-center">
-    <h1 class="text-4xl md:text-6xl font-black text-white text-shadow mb-8">
+    <h1 class="text-4xl md:text-6xl font-black text-white text-shadow tracking-tight mb-8">
       토니와 함께하는 기초영어
     </h1>
 
-    <div class="absolute bottom-6 w-full flex justify-center">
-      <div class="flex flex-wrap gap-4">
+    <div class="absolute bottom-6 w-full flex justify-center px-4">
+      <div class="flex flex-wrap justify-center gap-4">
         <a href="../index.html"
-           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded text-center">소개</a>
+           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">소개</a>
+
         <a href="../basic/index.html"
-           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded text-center">초급</a>
+           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">초급</a>
+
         <a href="./index.html"
-           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded text-center">중급</a>
+           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">중급</a>
+
         <a href="../advanced/index.html"
-           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded text-center">고급</a>
+           class="w-24 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded shadow-lg transition duration-300 text-center text-sm md:text-base">고급</a>
       </div>
     </div>
   </div>
 </header>
+
 
 <!-- ✅ 중등 콘텐츠 -->
 <div class="wrap">
