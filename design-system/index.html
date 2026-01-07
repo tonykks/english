@@ -20,10 +20,10 @@
   
   /* ✅ 과제의 핵심: 설명문(p)만 한 줄로 */
   .hero-desc{
-    white-space: nowrap;      /* 줄바꿈 금지 */
-    overflow: hidden;         /* 넘치면 숨김 */
-    text-overflow: ellipsis;  /* ... 처리 */
-    max-width: 100%;
+    white-space: nowrap;     /* 한 줄 유지 */
+    overflow: visible;       /* 숨기지 않음 */
+    text-overflow: clip;     /* ... 금지 */
+    font-size: clamp(12px, 1.6vw, 16px); /* 화면 좁으면 글자 자동 축소 */
   }
   </style>
 
@@ -152,6 +152,7 @@
   </main>
 </body>
 </html>
+
 
 
 
