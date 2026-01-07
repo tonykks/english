@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Patterns — Design System</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 바로가기</a>
+
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <span class="badge"><span class="dot"></span> Tony English Design System</span>
+      </div>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="./index.html">Overview</a>
+        <a href="./colors.html">Colors</a>
+        <a href="./typography.html">Typography</a>
+        <a href="./components.html">Components</a>
+        <a href="./patterns.html" aria-current="page">Patterns</a>
+        <a href="./anti-patterns.html">Anti-patterns</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <div class="container">
+        <h1>UI Patterns</h1>
+        <p class="muted">
+          패턴은 “반복되는 문제의 표준 해법”입니다.
+          기초영어 학습에서는 특히 <strong>피드백</strong>, <strong>진행</strong>, <strong>오류 안내</strong>가 핵심입니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid" style="gap:16px;">
+        <article class="card">
+          <h2>Pattern 1 — Feedback (정답/오답)</h2>
+          <table class="table" aria-label="피드백 패턴">
+            <thead>
+              <tr>
+                <th>상황</th>
+                <th>메시지 톤</th>
+                <th>다음 행동</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>정답</td>
+                <td>짧게 칭찬 + 확인</td>
+                <td>“다음 문장” 버튼 제공</td>
+              </tr>
+              <tr>
+                <td>오답</td>
+                <td>비난 금지, 힌트 제공</td>
+                <td>“다시 시도” + “힌트 보기”</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="row" style="margin-top:14px;">
+            <button class="btn btn-primary" type="button">정답: 다음 문장</button>
+            <button class="btn btn-secondary" type="button">오답: 힌트 보기</button>
+            <button class="btn btn-ghost" type="button">다시 시도</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Pattern 2 — Progress (진행 표시)</h2>
+          <p class="muted">
+            진행은 “불안을 줄이는 정보”입니다. 숫자/단계는 과하게 크지 않게,
+            화면 상단에 조용히 배치합니다.
+          </p>
+          <table class="table" aria-label="진행 표시 원칙">
+            <thead>
+              <tr><th>Do</th><th>Don’t</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>“3/10” 처럼 명확한 진행</td>
+                <td>끝이 안 보이는 로딩/무한 스피너</td>
+              </tr>
+              <tr>
+                <td>학습 흐름을 방해하지 않기</td>
+                <td>진행 표시가 주인공이 되기</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Pattern 3 — Errors (오류 안내)</h2>
+          <p class="muted">
+            오류 메시지는 “문제”가 아니라 “해결”을 말해야 합니다.
+            (예: “네트워크 오류” ❌ → “인터넷 연결을 확인하고 다시 시도하세요” ⭕)
+          </p>
+
+          <table class="table" aria-label="오류 메시지 작성 규칙">
+            <thead>
+              <tr>
+                <th>규칙</th>
+                <th>설명</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>원인 추측 최소화</td>
+                <td>사용자를 탓하지 않기</td>
+              </tr>
+              <tr>
+                <td>다음 행동 제공</td>
+                <td>버튼/링크로 해결 경로 제시</td>
+              </tr>
+              <tr>
+                <td>짧고 구체적</td>
+                <td>한 문장 + 행동 1개</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">© Tony English — Design System / Patterns</div>
+    </footer>
+  </main>
+</body>
+</html>

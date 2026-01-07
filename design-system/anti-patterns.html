@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Anti-patterns — Design System</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 바로가기</a>
+
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <span class="badge"><span class="dot"></span> Tony English Design System</span>
+      </div>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="./index.html">Overview</a>
+        <a href="./colors.html">Colors</a>
+        <a href="./typography.html">Typography</a>
+        <a href="./components.html">Components</a>
+        <a href="./patterns.html">Patterns</a>
+        <a href="./anti-patterns.html" aria-current="page">Anti-patterns</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <div class="container">
+        <h1>Anti-patterns</h1>
+        <p class="muted">
+          안티패턴은 “하지 말아야 할 것”을 명시해서,
+          시간이 지나도 디자인이 망가지지 않게 막는 <strong>방어막</strong>입니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid" style="gap:16px;">
+        <article class="card">
+          <h2>Global Anti-patterns</h2>
+          <table class="table" aria-label="전역 안티패턴">
+            <thead>
+              <tr>
+                <th>금지</th>
+                <th>왜 위험한가</th>
+                <th>대안</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>페이지마다 다른 버튼 스타일</td>
+                <td>학습자는 UI를 다시 배워야 함</td>
+                <td>btn-primary/secondary/ghost만 사용</td>
+              </tr>
+              <tr>
+                <td>새 색을 즉흥적으로 추가</td>
+                <td>의미 체계 붕괴, 유지보수 어려움</td>
+                <td>토큰 5색으로 해결</td>
+              </tr>
+              <tr>
+                <td>텍스트 대비 무시</td>
+                <td>가독성 하락, 접근성 문제</td>
+                <td>Ink/Blue로 대비 확보</td>
+              </tr>
+              <tr>
+                <td>애니메이션 과다</td>
+                <td>학습 집중 방해</td>
+                <td>150–200ms, 목적 있는 모션만</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Color Anti-patterns</h2>
+          <ul>
+            <li><strong>노랑 배경 위 흰 글자</strong> — 대비 부족</li>
+            <li><strong>빨강을 기본 강조</strong> — 시험/불안 톤 강화</li>
+            <li><strong>정답을 색만으로 표시</strong> — 색각 이슈/접근성 문제</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Typography Anti-patterns</h2>
+          <ul>
+            <li><strong>굵기 난립</strong> — 위계 붕괴</li>
+            <li><strong>줄간격 축소</strong> — 눈 피로 증가</li>
+            <li><strong>영어만 다른 폰트</strong> — 시각적 분열</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Interaction Anti-patterns</h2>
+          <ul>
+            <li><strong>클릭 영역 44px 미만</strong> — 모바일 오입력 증가</li>
+            <li><strong>hover 효과 과장</strong> — 시각 소음</li>
+            <li><strong>포커스 링 제거</strong> — 키보드/접근성 붕괴</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">© Tony English — Design System / Anti-patterns</div>
+    </footer>
+  </main>
+</body>
+</html>

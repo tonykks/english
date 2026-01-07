@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colors — Design System</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 바로가기</a>
+
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <span class="badge"><span class="dot"></span> Tony English Design System</span>
+      </div>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="./index.html">Overview</a>
+        <a href="./colors.html" aria-current="page">Colors</a>
+        <a href="./typography.html">Typography</a>
+        <a href="./components.html">Components</a>
+        <a href="./patterns.html">Patterns</a>
+        <a href="./anti-patterns.html">Anti-patterns</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <div class="container">
+        <h1>Color System</h1>
+        <p class="muted">
+          Primary Yellow는 “감정(동기/환영)”을 담당합니다.
+          정보는 Blue, 성취는 Green, 텍스트는 Ink, 배경은 Warm Background가 담당합니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid" style="gap:16px;">
+        <article class="card">
+          <h2>Palette</h2>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="chip" style="background: var(--primary-500)"></div>
+              <div>
+                <strong>Primary Yellow</strong>
+                <div class="muted">동기/환영/핵심 CTA</div>
+                <code>#FFC83D</code>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="chip" style="background: var(--ink-900)"></div>
+              <div>
+                <strong>Ink Black</strong>
+                <div class="muted">제목/본문 텍스트</div>
+                <code>#1F2933</code>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="chip" style="background: var(--bg-50)"></div>
+              <div>
+                <strong>Warm Background</strong>
+                <div class="muted">페이지 배경(눈 피로 감소)</div>
+                <code>#FFFBEA</code>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="chip" style="background: var(--blue-600)"></div>
+              <div>
+                <strong>Learning Blue</strong>
+                <div class="muted">링크/힌트/Info</div>
+                <code>#2563EB</code>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="chip" style="background: var(--green-500)"></div>
+              <div>
+                <strong>Success Green</strong>
+                <div class="muted">정답/완료/성취</div>
+                <code>#22C55E</code>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Usage Rules</h2>
+          <table class="table" aria-label="색상 사용 규칙">
+            <thead>
+              <tr>
+                <th>상황</th>
+                <th>권장 색</th>
+                <th>금지</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>주요 행동(CTA)</td>
+                <td>Primary Yellow</td>
+                <td>빨강을 기본 강조로 사용</td>
+              </tr>
+              <tr>
+                <td>링크/힌트/정보</td>
+                <td>Learning Blue</td>
+                <td>노랑으로 링크 표현</td>
+              </tr>
+              <tr>
+                <td>정답/완료</td>
+                <td>Success Green</td>
+                <td>정답을 “색만”으로 전달</td>
+              </tr>
+              <tr>
+                <td>본문 텍스트</td>
+                <td>Ink Black</td>
+                <td>노랑 배경 위 흰 글자</td>
+              </tr>
+              <tr>
+                <td>배경</td>
+                <td>Warm Background</td>
+                <td>완전 흰 배경만 고집</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Anti-patterns (Colors)</h2>
+          <ul>
+            <li><strong>노랑 배경 + 흰 글자</strong> (가독성 급락)</li>
+            <li><strong>버튼마다 다른 색</strong> (학습 UI에서 혼란 유발)</li>
+            <li><strong>의미 없는 색 추가</strong> (유지보수 지옥)</li>
+            <li><strong>빨강을 기본 강조</strong> (불안/시험 톤 강화)</li>
+          </ul>
+          <p class="muted">자세한 금지 목록은 Anti-patterns 페이지를 참고하세요.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">© Tony English — Design System / Colors</div>
+    </footer>
+  </main>
+</body>
+</html>

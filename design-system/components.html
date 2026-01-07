@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Components — Design System</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 바로가기</a>
+
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <span class="badge"><span class="dot"></span> Tony English Design System</span>
+      </div>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="./index.html">Overview</a>
+        <a href="./colors.html">Colors</a>
+        <a href="./typography.html">Typography</a>
+        <a href="./components.html" aria-current="page">Components</a>
+        <a href="./patterns.html">Patterns</a>
+        <a href="./anti-patterns.html">Anti-patterns</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <div class="container">
+        <h1>Components</h1>
+        <p class="muted">
+          컴포넌트는 “예쁘게”가 아니라 “재사용 가능하게”가 목적입니다.
+          버튼/카드/표는 학습 흐름을 방해하지 않아야 합니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid" style="gap:16px;">
+        <article class="card">
+          <h2>Buttons</h2>
+          <p class="muted">모든 버튼은 터치 영역 <strong>높이 44px</strong> 이상을 유지합니다.</p>
+          <div class="row" style="margin-top:14px;">
+            <button class="btn btn-primary" type="button">Primary</button>
+            <button class="btn btn-secondary" type="button">Secondary</button>
+            <button class="btn btn-ghost" type="button">Ghost</button>
+            <a class="btn btn-primary" href="./patterns.html">Link Button</a>
+          </div>
+
+          <div class="hr"></div>
+
+          <h3>Do / Don’t</h3>
+          <table class="table" aria-label="버튼 규칙">
+            <thead>
+              <tr><th>Do</th><th>Don’t</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Primary는 한 화면에 1개 중심으로</td>
+                <td>버튼마다 색/모양 제각각 만들기</td>
+              </tr>
+              <tr>
+                <td>문구는 동사로 시작(예: 시작하기)</td>
+                <td>“확인”만 반복(무슨 확인?)</td>
+              </tr>
+              <tr>
+                <td>포커스 링 유지(키보드/접근성)</td>
+                <td>outline 제거</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Cards</h2>
+          <p class="muted">카드는 정보를 “묶기” 위한 도구입니다. 카드 안에 또 카드를 중첩하지 않습니다.</p>
+
+          <div class="grid" style="grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px;">
+            <div class="card" style="box-shadow:none; border-radius:16px;">
+              <h3 style="margin-top:0;">Lesson Card</h3>
+              <p class="muted">학습 단위(과/세션)를 설명하는 카드.</p>
+              <div class="row">
+                <button class="btn btn-primary" type="button">학습 시작</button>
+                <button class="btn btn-secondary" type="button">미리보기</button>
+              </div>
+            </div>
+
+            <div class="card" style="box-shadow:none; border-radius:16px;">
+              <h3 style="margin-top:0;">Feedback Card</h3>
+              <p class="muted">정답/오답 피드백을 짧고 친절하게.</p>
+              <p><strong style="color:var(--green-500);">정답입니다!</strong> 다음 문장으로 넘어가세요.</p>
+            </div>
+          </div>
+
+          <p class="muted" style="margin-top:12px;">
+            ※ 위 예시는 “카드 안 카드”를 보여주기 위한 데모입니다. 실제 페이지에서는 카드 중첩을 피하세요.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Tables</h2>
+          <p class="muted">규칙, 스펙, 토큰은 표로 고정하면 유지보수가 쉬워집니다.</p>
+          <table class="table" aria-label="표 예시">
+            <thead>
+              <tr>
+                <th>컴포넌트</th>
+                <th>기본 높이</th>
+                <th>Radius</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Button</td>
+                <td>44px</td>
+                <td>999px(필 형태)</td>
+              </tr>
+              <tr>
+                <td>Card</td>
+                <td>—</td>
+                <td>16px</td>
+              </tr>
+              <tr>
+                <td>Input(향후)</td>
+                <td>44px</td>
+                <td>12px</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">© Tony English — Design System / Components</div>
+    </footer>
+  </main>
+</body>
+</html>

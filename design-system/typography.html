@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Typography — Design System</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 바로가기</a>
+
+  <header class="header">
+    <div class="container nav">
+      <div class="brand">
+        <span class="badge"><span class="dot"></span> Tony English Design System</span>
+      </div>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="./index.html">Overview</a>
+        <a href="./colors.html">Colors</a>
+        <a href="./typography.html" aria-current="page">Typography</a>
+        <a href="./components.html">Components</a>
+        <a href="./patterns.html">Patterns</a>
+        <a href="./anti-patterns.html">Anti-patterns</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero">
+      <div class="container">
+        <h1>Typography</h1>
+        <p class="muted">
+          Pretendard는 한/영 혼용 학습 UI에서 균형이 좋습니다.
+          학습용 문서는 “과한 장식”보다 “일관된 위계”가 핵심입니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container grid" style="gap:16px;">
+        <article class="card">
+          <h2>Font</h2>
+          <p><strong>Pretendard</strong> (Web CDN)</p>
+          <p class="muted">
+            사용 이유: 가독성, 한/영 균형, 웹 최적화, 무료/안정적 배포.
+          </p>
+          <div class="hr"></div>
+          <h3>CSS Snippet</h3>
+          <p class="muted"><span class="kbd">styles.css</span>에 이미 반영되어 있습니다.</p>
+          <pre class="card" style="box-shadow:none; background:rgba(31,41,51,0.03); border-radius:14px; overflow:auto;"><code>
+font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+line-height: 1.6;
+          </code></pre>
+        </article>
+
+        <article class="card">
+          <h2>Type Scale (권장)</h2>
+          <table class="table" aria-label="타이포 스케일">
+            <thead>
+              <tr>
+                <th>역할</th>
+                <th>Size</th>
+                <th>Weight</th>
+                <th>용도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hero Title</td>
+                <td>36–40px</td>
+                <td>700</td>
+                <td>페이지 최상단 제목</td>
+              </tr>
+              <tr>
+                <td>Section Title</td>
+                <td>24–28px</td>
+                <td>600</td>
+                <td>섹션 제목</td>
+              </tr>
+              <tr>
+                <td>Body</td>
+                <td>16–18px</td>
+                <td>400</td>
+                <td>본문/설명</td>
+              </tr>
+              <tr>
+                <td>Caption</td>
+                <td>14px</td>
+                <td>400</td>
+                <td>부가 설명/힌트</td>
+              </tr>
+              <tr>
+                <td>Button</td>
+                <td>16px</td>
+                <td>600–700</td>
+                <td>행동 유도</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <h2>Anti-patterns (Typography)</h2>
+          <ul>
+            <li><strong>굵기 3종 이상 난립</strong> → 위계가 아니라 소음이 됨</li>
+            <li><strong>줄간격 1.3 이하</strong> → 학습 UI에서 피로 증가</li>
+            <li><strong>영어만 다른 글꼴</strong> → 시각적 분열감 발생</li>
+            <li><strong>전체 대문자 남용</strong> → 읽기 속도 저하</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">© Tony English — Design System / Typography</div>
+    </footer>
+  </main>
+</body>
+</html>

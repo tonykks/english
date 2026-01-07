@@ -1,0 +1,338 @@
+/* =========================
+   Tony's Basic English — Design System
+   styles.css (shared)
+   ========================= */
+
+/* ---- Design Tokens ---- */
+:root{
+  /* Brand (Primary) */
+  --primary-500: #FFC83D;
+
+  /* Supporting */
+  --ink-900: #1F2933;
+  --bg-50: #FFFBEA;
+  --blue-600: #2563EB;
+  --green-500: #22C55E;
+
+  /* Neutrals */
+  --white: #FFFFFF;
+  --border-200: rgba(31, 41, 51, 0.12);
+  --shadow: 0 10px 30px rgba(31, 41, 51, 0.08);
+
+  /* Layout */
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+
+  /* Spacing (4px rule) */
+  --s-4: 4px;
+  --s-8: 8px;
+  --s-12: 12px;
+  --s-16: 16px;
+  --s-24: 24px;
+  --s-32: 32px;
+  --s-48: 48px;
+
+  /* Type */
+  --font: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --lh: 1.6;
+}
+
+/* ---- Base ---- */
+*{ box-sizing: border-box; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  font-family: var(--font);
+  line-height: var(--lh);
+  color: var(--ink-900);
+  background: var(--bg-50);
+}
+
+a{ color: var(--blue-600); text-decoration: none; }
+a:hover{ text-decoration: underline; }
+
+.container{
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.skip-link{
+  position:absolute; left:-999px; top:auto;
+  width:1px; height:1px; overflow:hidden;
+}
+.skip-link:focus{
+  left: 16px; top: 16px;
+  width:auto; height:auto;
+  padding: 10px 12px;
+  background: var(--white);
+  border: 1px solid var(--border-200);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  z-index: 9999;
+}
+
+/* ---- Top Nav ---- */
+.header{
+  position: sticky;
+  top:0;
+  z-index: 1000;
+  background: rgba(255, 251, 234, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-200);
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: var(--s-16);
+  padding: 14px 0;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--white);
+  border: 1px solid var(--border-200);
+  font-size: 13px;
+}
+
+.dot{
+  width:10px; height:10px;
+  border-radius: 999px;
+  background: var(--primary-500);
+  border: 1px solid rgba(31,41,51,0.15);
+}
+
+.nav-links{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.nav-links a{
+  display:inline-flex;
+  align-items:center;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  color: var(--ink-900);
+}
+
+.nav-links a:hover{
+  background: rgba(255, 200, 61, 0.18);
+  text-decoration: none;
+}
+
+.nav-links a[aria-current="page"]{
+  background: var(--primary-500);
+  border-color: rgba(31,41,51,0.12);
+}
+
+/* ---- Hero ---- */
+.hero{
+  padding: var(--s-48) 0 var(--s-32);
+}
+
+.hero h1{
+  margin: 0 0 10px;
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.hero p{
+  margin: 0;
+  font-size: 16px;
+  max-width: 72ch;
+  opacity: 0.9;
+}
+
+.grid{
+  display:grid;
+  gap: var(--s-16);
+}
+
+.grid-2{
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
+@media (max-width: 860px){
+  .grid-2{ grid-template-columns: 1fr; }
+  .nav{ align-items:flex-start; flex-direction: column; }
+  .nav-links{ justify-content: flex-start; }
+}
+
+/* ---- Card ---- */
+.card{
+  background: var(--white);
+  border: 1px solid var(--border-200);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow);
+  padding: var(--s-24);
+}
+
+.card h2{
+  margin: 0 0 12px;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.card h3{
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.muted{ opacity: 0.82; }
+
+.hr{
+  height:1px;
+  background: var(--border-200);
+  margin: var(--s-24) 0;
+}
+
+/* ---- Sections ---- */
+.section{
+  padding-bottom: var(--s-48);
+}
+
+.kbd{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  background: rgba(31,41,51,0.05);
+  padding: 2px 6px;
+  border: 1px solid rgba(31,41,51,0.12);
+  border-radius: 8px;
+}
+
+/* ---- Color Swatches ---- */
+.swatches{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: var(--s-12);
+}
+@media (max-width: 640px){
+  .swatches{ grid-template-columns: 1fr; }
+}
+
+.swatch{
+  display:flex;
+  gap: var(--s-12);
+  align-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border-200);
+  background: var(--white);
+}
+
+.chip{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(31,41,51,0.14);
+}
+
+.swatch strong{ display:block; }
+.swatch code{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+}
+
+/* ---- Components: Buttons ---- */
+.row{
+  display:flex;
+  flex-wrap: wrap;
+  gap: var(--s-12);
+  align-items: center;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease-out, background 150ms ease-out, border-color 150ms ease-out;
+  user-select: none;
+}
+
+.btn:active{ transform: translateY(1px); }
+
+.btn-primary{
+  background: var(--primary-500);
+  color: var(--ink-900);
+  border-color: rgba(31,41,51,0.12);
+}
+
+.btn-primary:hover{ background: rgba(255, 200, 61, 0.85); }
+
+.btn-secondary{
+  background: var(--white);
+  color: var(--ink-900);
+  border-color: rgba(255, 200, 61, 0.85);
+}
+
+.btn-secondary:hover{ background: rgba(255, 200, 61, 0.14); }
+
+.btn-ghost{
+  background: transparent;
+  color: var(--ink-900);
+  border-color: rgba(31,41,51,0.12);
+}
+
+.btn-ghost:hover{ background: rgba(31,41,51,0.05); }
+
+.btn:focus-visible, a:focus-visible{
+  outline: 3px solid rgba(37,99,235,0.35);
+  outline-offset: 2px;
+}
+
+/* ---- Tables ---- */
+.table{
+  width:100%;
+  border-collapse: collapse;
+  overflow:hidden;
+  border-radius: 14px;
+  border: 1px solid var(--border-200);
+  background: var(--white);
+}
+
+.table th, .table td{
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-200);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th{
+  background: rgba(255, 200, 61, 0.18);
+  font-weight: 700;
+}
+
+.table tr:last-child td{ border-bottom: none; }
+
+/* ---- Footer ---- */
+.footer{
+  padding: 24px 0 48px;
+  opacity: 0.75;
+  font-size: 14px;
+}
