@@ -29,6 +29,16 @@
         .slider-transition {
             transition: transform 1s ease-in-out;
         }
+
+        /* ADDED: footer의 작은 유틸 링크 스타일 */
+        .footer-util-link{
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+        }
+        .footer-util-link:hover{
+            color: rgba(255,255,255,0.9);
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -37,28 +47,23 @@
     <header class="relative w-full h-[350px] overflow-hidden group">
         
         <!-- 1. 슬라이더 트랙 -->
-        <!-- w-[400%]: 이미지 4장(원본3+복제1) 너비 확보 -->
         <div id="slider-track" class="absolute inset-y-0 left-0 flex flex-nowrap w-[400%] h-full z-0 slider-transition">
             
-            <!-- 이미지 1: main_banner.jpg -->
             <img src="./images/common/main_banner.jpg" 
                  alt="Main Banner 1"
                  class="w-1/4 h-full object-cover flex-shrink-0"
                  onerror="this.src='./images/common/main_banner.jpg'">
 
-            <!-- 이미지 2: main_banner1.jpg -->
             <img src="./images/common/main_banner1.jpg" 
                  alt="Main Banner 2"
                  class="w-1/4 h-full object-cover flex-shrink-0"
                  onerror="this.src='./images/common/main_banner.jpg'">
 
-            <!-- 이미지 3: main_banner2.jpg -->
             <img src="./images/common/main_banner2.jpg" 
                  alt="Main Banner 3"
                  class="w-1/4 h-full object-cover flex-shrink-0"
                  onerror="this.src='./images/common/main_banner.jpg'">
             
-            <!-- 무한 루프용 복제 이미지 (1번과 동일) -->
             <img src="./images/common/main_banner.jpg" 
                  alt="Clone Banner"
                  class="w-1/4 h-full object-cover flex-shrink-0">
@@ -150,6 +155,13 @@
     </main>
 
     <footer class="bg-gray-800 text-white py-6 text-center">
+        <!-- ADDED: 제작자용 유틸 링크(아주 작게) -->
+        <div class="mb-2 text-xs opacity-80">
+            <a class="footer-util-link" href="./design-system/index.html">Design System</a>
+            <span class="mx-2 opacity-50">|</span>
+            <a class="footer-util-link" href="./design_system.md" download="design_system.md">Design System (MD) Download</a>
+        </div>
+
         <p class="text-xs opacity-70">
             &copy; 2024 Tony's English. All Rights Reserved.
         </p>
@@ -159,13 +171,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
       const track = document.getElementById('slider-track');
-      if (!track) return; // slider-track이 없으면 조용히 종료(로컬/환경 차이 방어)
+      if (!track) return;
     
-      const totalSlides = 3;          // 원본(실제) 슬라이드 수
-      const slidesWithClone = 4;      // 원본 3 + 복제 1
-      const step = 100 / slidesWithClone; // 25 (%)
-      const durationMs = 1000;        // transition 시간(1s)
-      const intervalMs = 10000;       // 슬라이드 간격(10s)
+      const totalSlides = 3;
+      const slidesWithClone = 4;
+      const step = 100 / slidesWithClone;
+      const durationMs = 1000;
+      const intervalMs = 10000;
     
       let index = 0;
       let timer = null;
@@ -184,16 +196,14 @@
         index += 1;
         goTo(index, true);
     
-        // 마지막(복제) 슬라이드에 도달했으면 transition 끝난 직후 0으로 순간이동
         if (index === totalSlides) {
           const onEnd = (e) => {
             if (e.propertyName !== 'transform') return;
             track.removeEventListener('transitionend', onEnd);
     
             index = 0;
-            goTo(index, false); // 순간이동(transition OFF)
+            goTo(index, false);
     
-            // 다음 프레임에 transition 다시 ON (눈속임 안정화)
             requestAnimationFrame(() => {
               requestAnimationFrame(() => {
                 track.style.transition = `transform ${durationMs}ms ease-in-out`;
@@ -208,11 +218,9 @@
         }
       }
     
-      // 시작 상태 고정
       goTo(0, false);
       scheduleNext();
     
-      // 탭 비활성화/복귀 시 타이머 꼬임 방지(선택이지만 안정적)
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) clearTimeout(timer);
         else scheduleNext();
@@ -221,7 +229,3 @@
     </script>
 </body>
 </html>
-
-
-
-
